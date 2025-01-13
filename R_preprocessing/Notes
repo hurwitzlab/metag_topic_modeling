@@ -1,0 +1,33 @@
+Do normalization methods affect analysis:
+TSS (Done) (compositional)
+CSS
+UQ (Don't use)
+RLE (alr) (Don't use)
+TMM (Don't use - similar to TSS)
+CLR (Built-in) (clr)
+log10
+Z
+hellinger
+
+Use TSS as prevalence filter to remove from original
+ - Abundance (detection) core member
+ 
+Prevalence: How many samples must be present in (20) (move to 10 if too much is cut out)
+Abundance: To what quantity (start with zero - just prevalence)
+
+Steps:
+1.) Prevalence and abundance filter
+2.) subset original object
+3.) Apply transforms (above) (also figure out what they are doing)
+ - TSS (compositional) - normalize to percentages
+ - CLR (clr)
+ - log10 - logarithmic transform
+ - Z
+ - side note: summarize each transform type
+4.) Command to get OTU table: abundances
+5.) Command for taxa (if needed): taxa
+6.) Save and change file type to .csv
+6.) Put resulting tables back into VScode stuff (LDA)
+
+Figure everything out on OTU for now
+Later: try aggregating (level = XXX)
