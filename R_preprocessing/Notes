@@ -31,3 +31,21 @@ Steps:
 
 Figure everything out on OTU for now
 Later: try aggregating (level = XXX)
+
+Systematically text effect of filtering and normalization.
+Matrix of all combinations (filter levels, transform).
+Look at handling negatives in LDA.
+
+abundance, prevalance, filter type
+0
+...
+0.5
+
+filter types: log10 and tss
+try to figure out clr and Z
+
+(0,0,tss) is baseline to see if filtering or transforms are helping or not
+
+set up big compute
+
+make code ready to iterate through matrix of possibilities

@@ -33,12 +33,28 @@ TAX = tax_table(tax_mat_3)
 samples = sample_data(samples_df_2)
 
 carbom <- phyloseq(OTU, TAX, samples)
-carbom
 
 carbom.compositional <- microbiome::transform(carbom, "compositional")
-
-list.taxa.passing <- core_members(carbom.compositional, detection = 0/100, prevalence = 10/100)
-
+list.taxa.passing <- core_members(carbom.compositional, detection = 0/100, prevalence = 0/100)
+length(list.taxa.passing)
 filtered_physeq <- subset_taxa(carbom.compositional, OTU %in% list.taxa.passing)
+
+# transformations
+carbom_tss <- microbiome::transform(filtered_physeq, "compositional")
+#carbom_clr <- microbiome::transform(filtered_physeq, "clr")
+carbom_log10 <- microbiome::transform(filtered_physeq, "log10")
+#carbom_z <- microbiome::transform(filtered_physeq, "Z")
+
+# extract OTU tables
+otu_tss <- t(abundances(carbom_tss))
+#otu_clr <- t(abundances(carbom_clr))
+otu_log10 <- t(abundances(carbom_log10))
+#otu_z <- t(abundances(carbom_z))
+
+# save transformed OTU tables to .csv
+write.csv(otu_tss, "OTU_table_TSS.csv", row.names = TRUE)
+#write.csv(otu_clr, "OTU_table_CLR.csv", row.names = TRUE)
+write.csv(otu_log10, "OTU_table_Log10.csv", row.names = TRUE)
+#write.csv(otu_z, "OTU_table_Z.csv", row.names = TRUE)
 
 
