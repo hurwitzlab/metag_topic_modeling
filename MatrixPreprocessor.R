@@ -41,12 +41,12 @@ carbom <- phyloseq(OTU, TAX, samples)
 
 # Define preprocessing combinations
 prevalence_options <- c(TRUE, FALSE)
-transformations <- c("none", "log10", "compositional", "rarefy")
+transformations <- c("none", "log10", "compositional") #, "rarefy")
 
 for (prev in prevalence_options) {
   if (prev) {
     carbom.compositional <- microbiome::transform(carbom, "compositional")
-    list.taxa.passing <- core_members(carbom.compositional, detection = 0/100, prevalence = 0/100)
+    list.taxa.passing <- core_members(carbom.compositional, detection = 0.1/100, prevalence = 0.5/100)
     filtered_physeq <- subset_taxa(carbom.compositional, OTU %in% list.taxa.passing)
   } else {
     filtered_physeq <- carbom
@@ -55,20 +55,21 @@ for (prev in prevalence_options) {
   for (trans in transformations) {
     if (trans == "none") {
       transformed_physeq <- filtered_physeq
-    } else if (trans == "rarefy") {
-      # Apply rarefaction when 'rarefy' is selected
-      transformed_physeq <- rarefy_even_depth(filtered_physeq)
     } else {
       # Apply other transformations
       transformed_physeq <- microbiome::transform(filtered_physeq, trans)
     }
+    # } else if (trans == "rarefy") {
+    # Apply rarefaction when 'rarefy' is selected
+    #  transformed_physeq <- rarefy_even_depth(filtered_physeq)
     
     # Create file name based on combinations (00, 10, 01, 11, etc.)
     prevalence_code <- ifelse(prev, "1", "0")
-    transformation_code <- ifelse(trans == "none", "0", ifelse(trans == "log10", "1", ifelse(trans == "compositional", "2", ifelse(trans == "rarefy", "3", "4"))))
+    transformation_code <- ifelse(trans == "none", "0", ifelse(trans == "log10", "1", ifelse(trans == "compositional", "2", 3))) #ifelse(trans == "rarefy", "3", "4"))))
     
-    filename <- paste0("data_sets/preprocessed_table_", prevalence_code, transformation_code, ".csv")
+    filename <- paste0("data_sets/matrix/preprocessed_table_", prevalence_code, transformation_code, ".csv")
     otu_table_transformed <- t(abundances(transformed_physeq))
     write.csv(otu_table_transformed, filename, row.names = TRUE)
   }
 }
+
