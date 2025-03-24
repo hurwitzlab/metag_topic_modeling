@@ -41,7 +41,7 @@ carbom <- phyloseq(OTU, TAX, samples)
 
 # Define preprocessing combinations
 prevalence_options <- c(TRUE, FALSE)
-transformations <- c("none", "log10", "compositional") #, "rarefy")
+transformations <- c("none", "log10", "compositional", "rarefy")
 
 for (prev in prevalence_options) {
   if (prev) {
@@ -52,20 +52,23 @@ for (prev in prevalence_options) {
     filtered_physeq <- carbom
   }
   
+  # Check sequencing depth (total number of reads per sample) for <1000 reads - delete sample
+  
+  # Sample sum in microbiome package
+  
   for (trans in transformations) {
     if (trans == "none") {
       transformed_physeq <- filtered_physeq
+    } else if (trans == "rarefy") {
+      transformed_physeq <- rarefy_even_depth(filtered_physeq)
     } else {
       # Apply other transformations
       transformed_physeq <- microbiome::transform(filtered_physeq, trans)
     }
-    # } else if (trans == "rarefy") {
-    # Apply rarefaction when 'rarefy' is selected
-    #  transformed_physeq <- rarefy_even_depth(filtered_physeq)
     
     # Create file name based on combinations (00, 10, 01, 11, etc.)
     prevalence_code <- ifelse(prev, "1", "0")
-    transformation_code <- ifelse(trans == "none", "0", ifelse(trans == "log10", "1", ifelse(trans == "compositional", "2", 3))) #ifelse(trans == "rarefy", "3", "4"))))
+    transformation_code <- ifelse(trans == "none", "0", ifelse(trans == "log10", "1", ifelse(trans == "compositional", 2, 3)))
     
     filename <- paste0("data_sets/matrix/preprocessed_table_", prevalence_code, transformation_code, ".csv")
     otu_table_transformed <- t(abundances(transformed_physeq))
