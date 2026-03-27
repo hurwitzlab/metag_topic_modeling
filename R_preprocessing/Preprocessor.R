@@ -57,6 +57,26 @@ write.csv(otu_tss, "OTU_table_TSS.csv", row.names = TRUE)
 write.csv(otu_log10, "OTU_table_Log10.csv", row.names = TRUE)
 #write.csv(otu_z, "OTU_table_Z.csv", row.names = TRUE)
 
-#comment to make sure stuff works
+# Subset for Gastrointestinal Tract samples
+carbom_gut <- subset_samples(carbom, HMP_BODY_SITE == "Gastrointestinal Tract")
 
+# Subset for Oral samples
+carbom_oral <- subset_samples(carbom, HMP_BODY_SITE == "Oral")
 
+# Optional: prune taxa with total zero abundance after subsetting
+carbom_gut <- prune_taxa(taxa_sums(carbom_gut) > 0, carbom_gut)
+carbom_oral <- prune_taxa(taxa_sums(carbom_oral) > 0, carbom_oral)
+
+# Gut metadata
+gut_metadata <- as.data.frame(sample_data(carbom_gut))
+write.csv(gut_metadata, "data_sets/gut/gut_metadata.csv")
+
+# Oral metadata
+oral_metadata <- as.data.frame(sample_data(carbom_oral))
+write.csv(oral_metadata, "data_sets/oral/oral_metadata.csv")
+
+gut_otu_tss  <- t(as.data.frame(otu_table(carbom_gut)))
+oral_otu_tss <- t(as.data.frame(otu_table(carbom_oral)))
+
+write.csv(gut_otu_tss, "data_sets/gut/gut_otu.csv", quote = FALSE)
+write.csv(oral_otu_tss, "data_sets/oral/oral_otu.csv", quote = FALSE)
